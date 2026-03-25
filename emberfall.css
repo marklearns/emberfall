@@ -1,8 +1,9 @@
-/* * EMBERFALL STYLESHEET
- * Reconstructed from Source Document
+/* 
+ * EMBERFALL STYLESHEET
+ * Cleaned Version
  */
 
-[span_0](start_span)@import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');[span_0](end_span)
+@import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
 
 :root {
     /* Colors */
@@ -22,20 +23,24 @@
     --text: #e8dfc8;
     --text-dim: #8a7a60;
     --text-veil: #c0a0ff;
-    -[span_1](start_span)--card: rgba(8,5,18,.85);[span_1](end_span)
+    --card: rgba(8,5,18,.85);
 
     /* Typography */
     --font-title: 'Cinzel Decorative', serif;
     --font-ui: 'Cinzel', serif;
-    -[span_2](start_span)--font-body: 'Crimson Text', serif;[span_2](end_span)
+    --font-body: 'Crimson Text', serif;
 
     /* Utilities */
     --trans: .7s cubic-bezier(.4,0,.2,1);
-    -[span_3](start_span)--persp: 1400px;[span_3](end_span)
+    --persp: 1400px;
 }
 
 /* BASE RESET */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; [span_4](start_span)}
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 html, body {
     width: 100%;
@@ -48,11 +53,14 @@ html, body {
     cursor: default;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-}[span_4](end_span)
+}
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; [span_5](start_span)}
+::-webkit-scrollbar-thumb {
+    background: var(--gold-dim);
+    border-radius: 2px;
+}
 
 /* ENGINE & VIEWPORT */
 #game-viewport {
@@ -63,15 +71,27 @@ html, body {
     overflow: hidden;
     transform-style: preserve-3d;
     transition: filter .5s, transform .5s;
-}[span_5](end_span)
+}
 
-.starfield { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-.star { position: absolute; border-radius: 50%; background: #fff; animation: twinkle var(--d,3s) ease-in-out infinite alternate; }
+.starfield {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    animation: twinkle var(--d,3s) ease-in-out infinite alternate;
+}
 
 @keyframes twinkle {
     from { opacity: var(--a1,1); transform: scale(1); }
     to { opacity: var(--a2,.8); transform: scale(1.4); }
-[span_6](start_span)}
+}
 
 .scene {
     position: absolute;
@@ -81,22 +101,61 @@ html, body {
     opacity: 0;
     z-index: 1;
     transition: opacity var(--trans), filter var(--trans), transform var(--trans);
-}[span_6](end_span)
+}
 
-.scene.active { display: flex; opacity: 1; z-index: 10; [span_7](start_span)}
+.scene.active {
+    display: flex;
+    opacity: 1;
+    z-index: 10;
+}
 
-.scene.entering { animation: sceneEnter 1s cubic-bezier(.2,.8,.3,1) forwards; }
+.scene.entering {
+    animation: sceneEnter 1s cubic-bezier(.2,.8,.3,1) forwards;
+}
+
 @keyframes sceneEnter {
-    0% { opacity: 0; filter: blur(20px) brightness(.3); transform: scale(1.1) translateZ(50px); }
-    100% { opacity: 1; filter: blur(0) brightness(1); transform: scale(1) translateZ(0); }
-}[span_7](end_span)
+    0% {
+        opacity: 0;
+        filter: blur(20px) brightness(.3);
+        transform: scale(1.1) translateZ(50px);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(0) brightness(1);
+        transform: scale(1) translateZ(0);
+    }
+}
 
-/* PARALLAX & CAMERA */
-.p-layers { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; [span_8](start_span)}
-.p-layer { position: absolute; inset: -15%; background-size: cover; background-position: center; will-change: transform; transition: transform .1s linear; }[span_8](end_span)
-.p-far { transform: translateZ(-600px) scale(3); opacity: .5; filter: blur(3px); [span_9](start_span)}
-.p-mid { transform: translateZ(-250px) scale(1.9); opacity: .7; filter: blur(1px); }[span_9](end_span)
+/* PARALLAX */
+.p-layers {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    pointer-events: none;
+}
 
+.p-layer {
+    position: absolute;
+    inset: -15%;
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+    transition: transform .1s linear;
+}
+
+.p-far {
+    transform: translateZ(-600px) scale(3);
+    opacity: .5;
+    filter: blur(3px);
+}
+
+.p-mid {
+    transform: translateZ(-250px) scale(1.9);
+    opacity: .7;
+    filter: blur(1px);
+}
+
+/* CAMERA */
 @keyframes camShake {
     0%, 100% { transform: translate(0,0) rotate(0); }
     20% { transform: translate(-6px,4px) rotate(-.5deg); }
@@ -104,78 +163,99 @@ html, body {
     60% { transform: translate(-4px,6px) rotate(-.3deg); }
     80% { transform: translate(4px,-3px) rotate(.3deg); }
 }
-.cam-shake { animation: camShake .35s ease; [span_10](start_span)}
 
-@keyframes camZoomIn { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
-.cam-zoom { animation: camZoomIn .8s ease; }[span_10](end_span)
+.cam-shake { animation: camShake .35s ease; }
 
-/* HUD & STATS */
+@keyframes camZoomIn {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+.cam-zoom { animation: camZoomIn .8s ease; }
+
+/* HUD */
 #hud {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    pointer-events: none; padding: 12px 16px; display: flex;
-    align-items: flex-start; justify-content: space-between; gap: 8px;
-    transition: opacity 4s, transform 4s;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    pointer-events: none;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
     background: linear-gradient(180deg, rgba(3,2,10,.6) 0%, transparent 100%);
-[span_11](start_span)}
+}
 
-#hud.hidden { opacity: 0; pointer-events: none; transform: translateY(-20px); }[span_11](end_span)
-
-.hud-stats { display: flex; flex-direction: column; gap: 5px; pointer-events: auto; [span_12](start_span)}
-.stat-bar-outer { width: 90px; height: 7px; background: rgba(255,255,255,.08); border-radius: 4px; border: 1px solid rgba(255,255,255,1); overflow: hidden; position: relative; }[span_12](end_span)
-.stat-bar-inner { height: 100%; border-radius: 4px; transition: width .6s cubic-bezier(.4,0,2,1); position: relative; [span_13](start_span)}
-.stat-bar-inner::after { content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 8px; background: rgba(255,255,255,.3); filter: blur(3px); border-radius: 4px; }[span_13](end_span)
-
-.bar-hp.stat-bar-inner { background: linear-gradient(90deg, #cc2020, #ff4444); [span_14](start_span)}
-.bar-mp.stat-bar-inner { background: linear-gradient(90deg, #4040cc, #8060ff); }[span_14](end_span)
-.bar-xp.stat-bar-inner { background: linear-gradient(90deg, var(--gold-dim), var(--gold)); [span_15](start_span)}
-.bar-cor.stat-bar-inner { background: linear-gradient(90deg, #400060, #cc00ff); }[span_15](end_span)
+#hud.hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+}
 
 /* BUTTONS */
 .btn {
-    font-family: var(--font-ui); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
-    padding: 10px 18px; border: 1px solid rgba(240,192,64,.4); background: rgba(8,5,20,.85);
-    color: var(--gold); border-radius: 3px; cursor: pointer; transition: all .2s;
-    backdrop-filter: blur(8px); position: relative; overflow: hidden;
-    pointer-events: auto; display: inline-flex; align-items: center; gap: 6px; justify-content: center;
-[span_16](start_span)}
+    font-family: var(--font-ui);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border: 1px solid rgba(240,192,64,.4);
+    background: rgba(8,5,20,.85);
+    color: var(--gold);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all .2s;
+}
 
-.btn::before { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg,rgba(240,192,64,.1), transparent); opacity: 0; transition: opacity .2s; }[span_16](end_span)
-.btn:hover::before { opacity: 1; [span_17](start_span)}
-.btn:hover { border-color: var(--gold); box-shadow: 0 0 15px var(--gold-glow), inset 0 0 15px rgba(240,192,64,.05); transform: translateY(-2px); }[span_17](end_span)
-.btn:active { transform: translateY(1px) scale(.98); [span_18](start_span)}
-.btn.disabled { opacity: .4; pointer-events: none; }[span_18](end_span)
+.btn:hover {
+    border-color: var(--gold);
+    box-shadow: 0 0 15px var(--gold-glow);
+    transform: translateY(-2px);
+}
 
-/* SCENE CARDS */
-.scene-card {
-    background: var(--card); border: 1px solid rgba(240,192,64,.15);
-    border-radius: 6px; padding: 16px; backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0,0,0,.5); transition: transform .2s, box-shadow .2s;
-    animation: cardSlideIn .5s ease both;
-[span_19](start_span)}
+.btn:active {
+    transform: translateY(1px) scale(.98);
+}
 
-@keyframes cardSlideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }[span_19](end_span)
+.btn.disabled {
+    opacity: .4;
+    pointer-events: none;
+}
 
-/* COMBAT SYSTEM */
+/* COMBAT */
 #combat-overlay {
-    position: fixed; inset: 0; z-index: 200; display: none;
-    flex-direction: column; background: rgba(3,2,10,.97); backdrop-filter: blur(20px);
-[span_20](start_span)}
-#combat-overlay.active { display: flex; animation: combatSlideIn .5s ease; }[span_20](end_span)
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    background: rgba(3,2,10,.97);
+}
 
-.fighter-hp-fill { height: 100%; background: linear-gradient(90deg, #cc2020, #ff5050); border-radius: 4px; transition: width .4s ease; [span_21](start_span)}
-.fighter-hp-fill.player { background: linear-gradient(90deg, #20cc60, #40ff80); }[span_21](end_span)
+#combat-overlay.active {
+    display: flex;
+}
 
 .dmg-float {
-    position: absolute; font-family: var(--font-title); font-size: 28px; font-weight: 900;
-    color: #ff4444; text-shadow: 0 0 15px rgba(255,0,0,.8), 0 2px 4px rgba(0,0,0,.5);
-    pointer-events: none; animation: floatUp .9s ease-out forwards; z-index: 999;
-[span_22](start_span)}
+    position: absolute;
+    font-family: var(--font-title);
+    font-size: 28px;
+    font-weight: 900;
+    color: #ff4444;
+    animation: floatUp .9s ease-out forwards;
+}
 
-@keyframes floatUp { from { opacity: 1; transform: translateY(0) scale(1.3); } to { opacity: 0; transform: translateY(-70px) scale(.7); } }[span_22](end_span)
+@keyframes floatUp {
+    from { opacity: 1; transform: translateY(0) scale(1.3); }
+    to { opacity: 0; transform: translateY(-70px) scale(.7); }
+}
 
 /* RESPONSIVE */
-@media(max-width: 480px) {
+@media (max-width: 480px) {
     .action-grid { grid-template-columns: 1fr; }
     .combat-fighters { gap: 12px; }
-    .scene-character { left: 10% !important; bottom: 20%; [span_23](start_span)}[span_23](end_span)
+    .scene-character {
+        left: 10% !important;
+        bottom: 20%;
+    }
 }
