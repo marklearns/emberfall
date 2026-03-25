@@ -22,16 +22,16 @@
     --text: #e8dfc8;
     --text-dim: #8a7a60;
     --text-veil: #c0a0ff;
-    -[span_1](start_span)-card: rgba(8,5,18,.85);[span_1](end_span)
+    -[span_1](start_span)--card: rgba(8,5,18,.85);[span_1](end_span)
 
     /* Typography */
     --font-title: 'Cinzel Decorative', serif;
     --font-ui: 'Cinzel', serif;
-    -[span_2](start_span)-font-body: 'Crimson Text', serif;[span_2](end_span)
+    -[span_2](start_span)--font-body: 'Crimson Text', serif;[span_2](end_span)
 
     /* Utilities */
     --trans: .7s cubic-bezier(.4,0,.2,1);
-    -[span_3](start_span)-persp: 1400px;[span_3](end_span)
+    -[span_3](start_span)--persp: 1400px;[span_3](end_span)
 }
 
 /* BASE RESET */
