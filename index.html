@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EMBERFALL: Shadow of the Veil</title>
+    <link rel="stylesheet" href="emberfall.css">
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+    <div class="load-sigil">◈</div>
+    <div class="loading-title">EMBERFALL</div>
+    <div class="loading-sub-title">Shadow of the Veil</div>
+    <div class="loading-bar-wrap"><div class="loading-bar-fill" id="loading-bar"></div></div>
+    <div class="loading-sub" id="loading-sub">Initializing the Veil...</div>
+</div>
+
+<div class="starfield" id="starfield"></div>
+<div id="screen-flash" class="screen-flash"></div>
+<div id="wipe"><div class="wipe-inner"><div class="wipe-sigil">◈</div><div id="wipe-text"></div></div></div>
+
+<div id="game-viewport">
+
+    <!-- TITLE -->
+    <div class="scene" id="scene-title">
+        <div class="title-bg-layers">
+            <div class="title-orb title-orb-1"></div>
+            <div class="title-orb title-orb-2"></div>
+            <div class="title-orb title-orb-3"></div>
+        </div>
+        <div class="title-veil-particles" id="veil-particles"></div>
+        <div class="title-content">
+            <div class="title-eyebrow">A Veilwalker's Journey</div>
+            <div class="title-main">EMBERFALL</div>
+            <div class="title-sub">Shadow of the Veil</div>
+            <div class="title-rule"></div>
+            <div class="title-lore">"Between the living and forgotten,<br>where reality fractures—only you can walk the Veil."</div>
+            <div class="title-buttons">
+                <button class="title-btn title-btn-primary" onclick="Game.startNewGame()">
+                    <span class="tbtn-icon">⚔</span><span class="tbtn-label">Begin Journey</span>
+                </button>
+                <button class="title-btn" onclick="Game.continueGame()" id="btn-continue" style="display:none">
+                    <span class="tbtn-icon">◈</span><span class="tbtn-label">Continue</span>
+                </button>
+                <div class="title-btn-row">
+                    <button class="title-btn title-btn-sm" onclick="Game.openModeSelect()">Game Modes</button>
+                    <button class="title-btn title-btn-sm veil" onclick="Game.openStats()">Veilwalker Log</button>
+                </div>
+            </div>
+        </div>
+        <div class="title-version">V5.0 · IMMERSIVE ENGINE</div>
+    </div>
+
+    <!-- MAP -->
+    <div class="scene" id="scene-map">
+        <div class="scene-inner map-scene-inner">
+            <div class="map-atmosphere"></div>
+            <div class="map-topbar">
+                <div class="map-topbar-title"><span class="map-topbar-sigil">◈</span> WORLD OF EMBERFALL</div>
+                <div class="map-topbar-actions">
+                    <button class="icon-btn" onclick="Game.openStats()">👤</button>
+                    <button class="icon-btn" onclick="Game.openJournal()">📜</button>
+                </div>
+            </div>
+            <div class="map-canvas" id="map-canvas">
+                <svg class="map-svg" viewBox="0 0 680 420" preserveAspectRatio="xMidYMid meet">
+                    <defs><filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+                    <path d="M 200 230 Q 280 200 340 170" filter="url(#glow)"/>
+                    <path d="M 200 230 Q 200 290 220 330" filter="url(#glow)"/>
+                    <path d="M 340 170 Q 420 170 500 200" filter="url(#glow)"/>
+                    <path d="M 340 170 Q 370 250 380 310" filter="url(#glow)"/>
+                    <path d="M 500 200 Q 560 170 610 120" stroke-dasharray="4 4" stroke="rgba(128,64,255,0.4)" filter="url(#glow)"/>
+                    <path d="M 220 330 Q 420 380 610 120" stroke-dasharray="20" stroke="rgba(128,64,255,0.15)"/>
+                </svg>
+                <div class="map-node" id="node-village" style="left:29%;top:55%;" onclick="SceneEngine.travel('village')">
+                    <div class="node-ring"></div><div class="node-icon">🏘</div>
+                    <div class="node-label">The Village</div><div class="node-chapter">Ch. I</div>
+                </div>
+                <div class="map-node" id="node-forest" style="left:50%;top:40%;" onclick="SceneEngine.travel('forest')">
+                    <div class="node-ring"></div><div class="node-icon">🌲</div>
+                    <div class="node-label">Whispering Forest</div><div class="node-chapter">Ch. II</div>
+                </div>
+                <div class="map-node locked" id="node-dungeon" style="left:33%;top:79%;" onclick="SceneEngine.travel('dungeon')">
+                    <div class="node-ring"></div><div class="node-icon">⛏</div>
+                    <div class="node-label">The Dungeon</div><div class="node-chapter">Hidden</div>
+                </div>
+                <div class="map-node locked" id="node-castle" style="left:74%;top:47%;" onclick="SceneEngine.travel('castle')">
+                    <div class="node-ring"></div><div class="node-icon">🏰</div>
+                    <div class="node-label">Broken Castle</div><div class="node-chapter">Ch. III</div>
+                </div>
+                <div class="map-node locked" id="node-arena" style="left:56%;top:74%;" onclick="SceneEngine.travel('arena')">
+                    <div class="node-ring"></div><div class="node-icon">⚔</div>
+                    <div class="node-label">Echo Arena</div><div class="node-chapter">Trial</div>
+                </div>
+                <div class="map-node locked veil-node" id="node-veil" style="left:90%;top:28%;" onclick="SceneEngine.travel('veil')">
+                    <div class="node-ring veil-ring"></div><div class="node-icon">◉</div>
+                    <div class="node-label" style="color:var(--text-veil)">Veil Core</div><div class="node-chapter" style="color:var(--veil)">Ch. IV</div>
+                </div>
+                <div class="map-player" id="map-player" style="left:29%;top:55%;">
+                    <div class="map-player-dot"></div><div class="map-player-ring"></div>
+                </div>
+            </div>
+            <div class="map-info-bar"><span class="map-info-icon">◈</span><span id="map-info-text">Select a location to travel</span></div>
+            <div class="bottom-nav">
+                <button class="nav-btn" onclick="SceneEngine.travel('map')"><span class="nav-icon">🗺</span><span class="nav-label">Map</span></button>
+                <button class="nav-btn" onclick="Inventory.open()"><span class="nav-icon">🎒</span><span class="nav-label">Pack</span></button>
+                <button class="nav-btn" onclick="Game.openStats()"><span class="nav-icon">👤</span><span class="nav-label">Status</span></button>
+                <button class="nav-btn" onclick="Game.openJournal()"><span class="nav-icon">📜</span><span class="nav-label">Lore</span></button>
+                <button class="nav-btn" onclick="Game.openCraft()"><span class="nav-icon">⚗</span><span class="nav-label">Craft</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VILLAGE -->
+    <div class="scene" id="scene-village">
+        <div class="scene-inner">
+            <div class="scene-bg village-bg"></div>
+            <div class="torch-light" style="left:8%;top:55%;width:220px;height:220px;"></div>
+            <div class="torch-light" style="right:10%;top:60%;width:160px;height:160px;animation-delay:.8s"></div>
+            <div id="village-smoke"></div>
+            <div class="scene-stage">
+                <div class="scene-character" id="village-char"><div class="char-sprite"></div><div class="char-shadow"></div></div>
+                <div class="scene-atmosphere-text">Ash'vel</div>
+            </div>
+            <div class="scene-topbar">
+                <button class="back-btn" onclick="SceneEngine.travel('map')">← Map</button>
+                <div class="scene-chapter-badge">Chapter I</div>
+                <button class="icon-btn" onclick="Inventory.open()">🎒</button>
+            </div>
+            <div class="scene-panel">
+                <div class="scene-panel-header">
+                    <div class="panel-location-name">The Fading Village</div>
+                    <div class="panel-subtitle">A village caught between moments</div>
+                </div>
+                <div class="scene-desc">You emerge from the fog. The village of <strong>Ash'vel</strong> flickers — buildings shimmer between solid and translucent. Time itself is fraying here.</div>
+                <div class="npc-block">
+                    <div class="npc-avatar"></div>
+                    <div class="npc-speech">
+                        <div class="npc-name-tag">Elder Mora</div>
+                        <div class="npc-dialogue" id="mora-line">"Stranger... you look different. Like you don't belong to this moment. Have we met before?"</div>
+                    </div>
+                </div>
+                <div class="action-section-title">What will you do?</div>
+                <div class="action-list">
+                    <button class="action-card" onclick="Village.helpVillagers()">
+                        <span class="ac-icon">🤝</span>
+                        <div class="ac-body"><div class="ac-title">Help Villagers</div><div class="ac-desc">Aid the looping townsfolk · Morality +20</div></div>
+                        <span class="ac-arrow">›</span>
+                    </button>
+                    <button class="action-card" onclick="Village.explore()">
+                        <span class="ac-icon">🔍</span>
+                        <div class="ac-body"><div class="ac-title">Explore the Village</div><div class="ac-desc">Search for hidden items and gold</div></div>
+                        <span class="ac-arrow">›</span>
+                    </button>
+                    <button class="action-card" onclick="Village.talkElder()">
+                        <span class="ac-icon">💬</span>
+                        <div class="ac-body"><div class="ac-title">Talk to Elder Mora</div><div class="ac-desc">Learn about the Veil's origin</div></div>
+                        <span class="ac-arrow">›</span>
+                    </button>
+                    <button class="action-card" onclick="Village.shop()">
+                        <span class="ac-icon">🛒</span>
+                        <div class="ac-body"><div class="ac-title">Trade at the Market</div><div class="ac-desc">Buy potions, charms, weapons</div></div>
+                        <span class="ac-arrow">›</span>
+                    </button>
+                    <button class="action-card ac-rest" onclick="Village.rest()">
+                        <span class="ac-icon">🕯</span>
+                        <div class="ac-body"><div class="ac-title">Rest at the Inn</div><div class="ac-desc">Restore HP &amp; MP fully</div></div>
+                        <span class="ac-cost">20g</span>
+                    </button>
+                </div>
+                <div id="village-events" class="event-log" style="display:none"><div id="village-log"></div></div>
+            </div>
+            <div class="bottom-nav scene-bottom-nav">
+                <button class="nav-btn" onclick="SceneEngine.travel('map')"><span class="nav-icon">🗺</span><span class="nav-label">Map</span></button>
+                <button class="nav-btn" onclick="Inventory.open()"><span class="nav-icon">🎒</span><span class="nav-label">Pack</span></button>
+                <button class="nav-btn" onclick="Game.openStats()"><span class="nav-icon">👤</span><span class="nav-label">Status</span></button>
+                <button class="nav-btn" onclick="Game.openJournal()"><span class="nav-icon">📜</span><span class="nav-label">Lore</span></button>
+                <button class="nav-btn" onclick="Game.openCraft()"><span class="nav-icon">⚗</span><span class="nav-label">Craft</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOREST -->
+    <div class="scene" id="scene-forest">
+        <div class="scene-inner">
+            <div class="scene-bg forest-bg"></div>
+            <div class="tree-silhouette tree-left" style="--tw:7s;--tr:0.8deg;--ts:0.5deg;"></div>
+            <div class="tree-silhouette tree-right" style="--tw:5s;--tr:-0.6deg;--ts:-0.3deg;animation-delay:1s"></div>
+            <div id="forest-fireflies"></div>
+            <div class="forest-fog"></div>
+            <div class="scene-stage">
+                <div class="scene-character" id="forest-char"><div class="char-sprite"></div><div class="char-shadow"></div></div>
+                <div class="scene-atmosphere-text" style="color:rgba(128,64,255,0.4)">Whispering Forest</div>
+            </div>
+            <div class="scene-topbar">
+                <button class="back-btn" onclick="SceneEngine.travel('map')">← Map</button>
+                <div class="scene-chapter-badge veil-badge">Chapter II</div>
+                <button class="icon-btn" onclick="Inventory.open()">🎒</button>
+            </div>
+            <div class="scene-panel">
+                <div class="scene-panel-header">
+                    <div class="panel-location-name" style="color:var(--text-veil)">Whispering Forest</div>
+                    <div class="panel-subtitle">Voices in the dark canopy</div>
+                </div>
+                <div class="scene-desc" id="forest-desc">The trees lean in when you're not looking. A sound — barely a voice — drifts through the dark. Something watches from between the branches.</div>
+                <div class="npc-block" style="border-color:rgba(128,64,255,0.3);background:rgba(20,5,40,0.6)">
+                    <div class="npc-avatar" style="background:rgba(128,64,255,0.2);border-color:rgba(128,64,255,0.5)"></div>
+                    <div class="npc-speech">
+                        <div class="npc-name-tag" style="color:var(--text-veil)">The Whisper</div>
+                        <div class="npc-dialogue" style="color:var(--text-veil)" id="whisper-line">"Come deeper, Veilwalker. We know what you seek. Power like you've never felt..."</div>
+                    </div>
+                </div>
+                <div class="action-section-title">Choose your path</div>
+                <div class="action-list">
+                    <button class="action-card ac-veil" onclick="Forest.followVoices()">
+                        <span class="ac-icon">🌀</span>
+                        <div class="ac-body"><div class="ac-title" style="color:var(--text-veil)">Follow the Voices</div><div class="ac-desc">Gain power · Corruption +15</div></div>
+                        <span class="ac-arrow" style="color:var(--veil)">›</span>
+                    </button>
+                    <button class="action-card" onclick="Forest.ignoreVoices()">
+                        <span class="ac-icon">🛡</span>
+                        <div class="ac-body"><div class="ac-title">Stay Grounded</div><div class="ac-desc">Resist the Veil · Morality +10</div></div>
+                        <span class="ac-arrow">›</span>
+                    </button>
+                    <button class="action-card ac-danger" onclick="Forest.fightEnemy()">
+                        <span class="ac-icon">⚔</span>
+                        <div class="ac-body"><div class="ac-title">Hunt the Creature</div><div class="ac-desc">Fight the Forest Wraith</div></div>
+                        <span class="ac-arrow" style="color:var(--blood)">›</span>
+                    </button>
+                    <button class="action-card" onclick="Forest.gather()">
+                        <span class="ac-icon">🌿</span>
+                        <div class="ac-body"><div class="ac-title">Gather Herbs</div><div class="ac-desc">Collect rare forest ingredients</div></div>
+                        <span class="ac-arrow">›</span>
+                    </button>
+                </div>
+                <div id="forest-events" class="event-log" style="display:none"><div id="forest-log"></div></div>
+            </div>
+            <div class="bottom-nav scene-bottom-nav">
+                <button class="nav-btn" onclick="SceneEngine.travel('map')"><span class="nav-icon">🗺</span><span class="nav-label">Map</span></button>
+                <button class="nav-btn" onclick="Inventory.open()"><span class="nav-icon">🎒</span><span class="nav-label">Pack</span></button>
+                <button class="nav-btn" onclick="Game.openStats()"><span class="nav-icon">👤</span><span class="nav-label">Status</span></button>
+                <button class="nav-btn" onclick="Game.openJournal()"><span class="nav-icon">📜</span><span class="nav-label">Lore</span></button>
+                <button class="nav-btn" onclick="Game.openCraft()"><span class="nav-icon">⚗</span><span class="nav-label">Craft</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DUNGEON -->
+    <div class="scene" id="scene-dungeon">
+        <div class="scene-inner">
+            <div class="scene-bg dungeon-bg"></div>
+            <div class="drip" style="left:15%;--dd:2.2s;"></div>
+            <div class="drip" style="left:55%;--dd:3.8s;animation-delay:1.5s"></div>
+            <div id="dungeon-dust"></div>
+            <div class="scene-stage">
+                <div class="scene-character" id="dungeon-char"><div class="char-sprite"></div><div class="char-shadow"></div></div>
+                <div class="scene-atmosphere-text" style="color:rgba(80,120,180,0.4)">The Dungeon</div>
+            </div>
+            <div class="scene-topbar">
+                <button class="back-btn" onclick="SceneEngine.travel('map')">← Map</button>
+                <div class="scene-chapter-badge dark-badge">Hidden Path</div>
+                <button class="icon-btn" onclick="Inventory.open()">🎒</button>
+            </div>
+            <div class="scene-panel">
+                <div class="scene-panel-header">
+                    <div class="panel-location-name" style="color:#8ab0d0">The Dungeon</div>
+                    <div class="panel-subtitle">Ancient stone. Ancient evil.</div>
+                </div>
+                <div class="scene-desc">Stone walls weep moisture. Torches never stay lit for long. Something ancient sleeps in the lowest chamber — you can feel it breathing through the floor.</div>
+                <div class="action-section-title">Actions</div>
+                <div class="action-list">
+                    <button class="action-card" onclick="Dungeon.explore()">
+                        <span class="ac-icon">🔦</span>
+                        <div class="ac-body"><div class="ac-title">Explore the Depths</div><div class="ac-desc">Map the dungeon, find secrets</div></div>
+                        <span class="ac-arrow">›</span>
+                    </button>
+                    <button class="action-card ac-danger" onclick="Dungeon.fightBoss()">
+                        <span class="ac-icon">💀</span>
+                        <div class="ac-body"><div class="ac-title">Face the Dark</div><div class="ac-desc">Fight the Stone Golem boss</div></div>
+                        <span class="ac-arrow" style="color:var(--blood)">›</span>
+                    </button>
+                    <button class="action-card" onclick="Dungeon.searchChests()">
+                        <span class="ac-icon">📦</span>
+                        <div class="ac-body"><div class="ac-title">Search Chests</div><div class="ac-desc">Loot the dungeon chambers</div></div>
+                        <span class="ac-arrow">›</span>
+                    </button>
+                    <button class="action-card ac-veil" onclick="Dungeon.veilFragment()">
+                        <span class="ac-icon">◉</span>
+                        <div class="ac-body"><div class="ac-title">Veil Fragment</div><div class="ac-desc">Absorb Veil energy · Corruption +10</div></div>
+                        <span class="ac-arrow" style="color:var(--veil)">›</span>
+                    </button>
+                </div>
+                <div id="dungeon-events" class="event-log" style="display:none"><div id="dungeon-log"></div></div>
+            </div>
+            <div class="bottom-nav scene-bottom-nav">
+                <button class="nav-btn" onclick="SceneEngine.travel('map')"><span class="nav-icon">🗺</span><span class="nav-label">Map</span></button>
+                <button class="nav-btn" onclick="Inventory.open()"><span class="nav-icon">🎒</span><span class="nav-label">Pack</span></button>
+                <button class="nav-btn" onclick="Game.openStats()"><span class="nav-icon">👤</span><span class="nav-label">Status</span></button>
+                <button class="nav-btn" onclick="Game.openJournal()"><span class="nav-icon">📜</span><span class="nav-label">Lore</span></button>
+                <button class="nav-btn" onclick="Game.openCraft()"><span class="nav-icon">⚗</span><span class="nav-label">Craft</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CASTLE -->
+    <div class="scene" id="scene-castle">
+        <div class="scene-inner">
+            <div class="scene-bg castle-bg"></div>
+            <div class="glitch-layer" id="castle-glitch"></div>
+            <div class="scene-stage">
+                <div class="scene-character" id="castle-char"><div class="char-sprite"></div><div class="char-shadow"></div></div>
+                <div class="scene-atmosphere-text" style="color:rgba(200,80,80,0.4)">Broken Castle</div>
+            </div>
+            <div class="scene-topbar">
+                <button class="back-btn" onclick="SceneEngine.travel('map')">← Map</button>
+                <div class="scene-chapter-badge danger-badge">Chapter III</div>
+                <button class="icon-btn" onclick="Inventory.open()">🎒</button>
+            </div>
+            <div class="scene-panel">
+                <div class="scene-panel-header">
+                    <div class="panel-location-name" style="color:#e08080">Broken Castle</div>
+                    <div class="panel-subtitle">The corrupted throne awaits</div>
+                </div>
+                <div class="scene-desc">The king sits on his throne, alive — yet his eyes are wrong. Empty. The guards march in endless loops. They do not know they are already dead.</div>
+                <div class="npc-block" style="border-color:rgba(200,40,40,0.3);background:rgba(40,5,5,0.6)">
+                    <div class="npc-avatar" style="background:rgba(200,40,40,0.15);border-color:rgba(200,40,40,0.4)"></div>
+                    <div class="npc-speech">
+                        <div class="npc-name-tag" style="color:#e08080">King Aldric — Corrupted</div>
+                        <div class="npc-dialogue" style="color:#c09090">"You... arrived. I knew someone would come. The Veil told me. It told me there would be NO WAY OUT—"</div>
+                    </div>
+                </div>
+                <div class="action-section-title">Moment of Decision</div>
+                <div class="action-list">
+                    <button class="action-card ac-danger" onclick="Castle.killKing()">
+                        <span class="ac-icon">☠</span>
+                        <div class="ac-body"><div class="ac-title">Strike Down the King</div><div class="ac-desc">End his suffering · Morality -25</div></div>
+                        <span class="ac-arrow" style="color:var(--blood)">›</span>
+                    </button>
+                    <button class="action-card ac-veil" onclick="Castle.freeKing()">
+                        <span class="ac-icon">✨</span>
+                        <div class="ac-body"><div class="ac-title">Break the Curse</div><div class="ac-desc">Free the king · Morality +30</div></div>
+                        <span class="ac-arrow" style="color:var(--veil)">›</span>
+                    </button>
+                    <button class="action-card" onclick="Castle.fightGuards()">
+                        <span class="ac-icon">⚔</span>
+                        <div class="ac-body"><div class="ac-title">Fight the Hollow Guards</div><div class="ac-desc">Combat the looping soldiers</div></div>
+                        <span class="ac-arrow">›</span>
+                    </button>
+                    <button class="action-card" onclick="Castle.searchCastle()">
+                        <span class="ac-icon">🔍</span>
+                        <div class="ac-body"><div class="ac-title">Search the Castle</div><div class="ac-desc">Find hidden gold and secrets</div></div>
+                        <span class="ac-arrow">›</span>
+                    </button>
+                </div>
+                <div id="castle-events" class="event-log" style="display:none"><div id="castle-log"></div></div>
+            </div>
+            <div class="bottom-nav scene-bottom-nav">
+                <button class="nav-btn" onclick="SceneEngine.travel('map')"><span class="nav-icon">🗺</span><span class="nav-label">Map</span></button>
+                <button class="nav-btn" onclick="Inventory.open()"><span class="nav-icon">🎒</span><span class="nav-label">Pack</span></button>
+                <button class="nav-btn" onclick="Game.openStats()"><span class="nav-icon">👤</span><span class="nav-label">Status</span></button>
+                <button class="nav-btn" onclick="Game.openJournal()"><span class="nav-icon">📜</span><span class="nav-label">Lore</span></button>
+                <button class="nav-btn" onclick="Game.openCraft()"><span class="nav-icon">⚗</span><span class="nav-label">Craft</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ARENA -->
+    <div class="scene" id="scene-arena">
+        <div class="scene-inner">
+            <div class="scene-bg arena-bg"></div>
+            <div class="scene-stage">
+                <div class="scene-atmosphere-text" style="color:rgba(240,192,64,0.5)">Echo Arena</div>
+            </div>
+            <div class="scene-topbar">
+                <button class="back-btn" onclick="SceneEngine.travel('map')">← Map</button>
+                <div class="scene-chapter-badge gold-badge">Trial Mode</div>
+                <button class="icon-btn" onclick="Inventory.open()">🎒</button>
+            </div>
+            <div class="scene-panel">
+                <div class="scene-panel-header">
+                    <div class="panel-location-name">Echo Arena</div>
+                    <div class="panel-subtitle" id="arena-record">Best: Wave 0 | Wins: 0</div>
+                </div>
+                <div class="scene-desc">Ancient ruins repurposed for combat. Your enemies are <strong style="color:var(--text-veil)">echoes</strong> — memories of fallen warriors trapped in a loop of battle.</div>
+                <div class="action-section-title">Choose your Trial</div>
+                <div class="action-list">
+                    <button class="action-card" onclick="Arena.startWave(1)">
+                        <span class="ac-icon">🗡</span>
+                        <div class="ac-body"><div class="ac-title">Scout Trial</div><div class="ac-desc">Fight Dark Scout · Easy</div></div>
+                        <span class="ac-arrow">›</span>
+                    </button>
+                    <button class="action-card" onclick="Arena.startWave(2)">
+                        <span class="ac-icon">⚔</span>
+                        <div class="ac-body"><div class="ac-title">Warrior Trial</div><div class="ac-desc">Fight Echo Warrior · Medium</div></div>
+                        <span class="ac-arrow">›</span>
+                    </button>
+                    <button class="action-card ac-danger" onclick="Arena.startWave(3)">
+                        <span class="ac-icon">🏆</span>
+                        <div class="ac-body"><div class="ac-title">Champion Trial</div><div class="ac-desc">Fight Echo Champion · Hard</div></div>
+                        <span class="ac-arrow" style="color:var(--blood)">›</span>
+                    </button>
+                    <button class="action-card ac-veil" onclick="Arena.startEndless()">
+                        <span class="ac-icon">∞</span>
+                        <div class="ac-body"><div class="ac-title">Endless Veil</div><div class="ac-desc">Survive as long as possible</div></div>
+                        <span class="ac-arrow" style="color:var(--veil)">›</span>
+                    </button>
+                </div>
+            </div>
+            <div class="bottom-nav scene-bottom-nav">
+                <button class="nav-btn" onclick="SceneEngine.travel('map')"><span class="nav-icon">🗺</span><span class="nav-label">Map</span></button>
+                <button class="nav-btn" onclick="Inventory.open()"><span class="nav-icon">🎒</span><span class="nav-label">Pack</span></button>
+                <button class="nav-btn" onclick="Game.openStats()"><span class="nav-icon">👤</span><span class="nav-label">Status</span></button>
+                <button class="nav-btn" onclick="Game.openJournal()"><span class="nav-icon">📜</span><span class="nav-label">Lore</span></button>
+                <button class="nav-btn" onclick="Game.openCraft()"><span class="nav-icon">⚗</span><span class="nav-label">Craft</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VEIL CORE -->
+    <div class="scene" id="scene-veil">
+        <div class="scene-inner">
+            <div class="scene-bg veil-bg"></div>
+            <div class="glitch-layer active" id="veil-glitch"></div>
+            <div id="veil-tendrils"></div>
+            <div class="scene-stage">
+                <div class="veil-orb-display"></div>
+                <div class="scene-atmosphere-text" style="color:rgba(128,64,255,0.6)">The Veil Core</div>
+            </div>
+            <div class="scene-topbar">
+                <button class="back-btn" onclick="SceneEngine.travel('map')">← Map</button>
+                <div class="scene-chapter-badge veil-badge">Chapter IV</div>
+                <button class="icon-btn" onclick="Inventory.open()">🎒</button>
+            </div>
+            <div class="scene-panel" style="border-top-color:rgba(128,64,255,0.4);background:rgba(10,2,25,0.97)">
+                <div class="scene-panel-header">
+                    <div class="panel-location-name" style="color:var(--text-veil)">The Veil Core</div>
+                    <div class="panel-subtitle">Reality bends here</div>
+                </div>
+                <div class="scene-desc" style="color:var(--text-veil)" id="veil-desc">The world here does not obey. Multiple versions of you exist in the same space. The Veil awaits your final decision.</div>
+                <div class="npc-block" style="border-color:rgba(128,64,255,0.4);background:rgba(20,5,40,0.7)">
+                    <div class="npc-avatar" style="background:rgba(128,64,255,0.2);border-color:rgba(128,64,255,0.6)"></div>
+                    <div class="npc-speech">
+                        <div class="npc-name-tag" style="color:var(--text-veil)">The Veil — Speaking</div>
+                        <div class="npc-dialogue" style="color:var(--text-veil)" id="veil-voice">"You've walked far, Veilwalker. Now you must choose what you become."</div>
+                    </div>
+                </div>
+                <div class="action-section-title" style="color:var(--text-veil)">The Final Choice</div>
+                <div class="action-list">
+                    <button class="action-card" onclick="VeilCore.destroy()">
+                        <span class="ac-icon">💥</span>
+                        <div class="ac-body"><div class="ac-title">Destroy the Veil</div><div class="ac-desc">End the fracture. Free the world.</div></div>
+                        <span class="ac-arrow">›</span>
+                    </button>
+                    <button class="action-card ac-danger" onclick="VeilCore.control()">
+                        <span class="ac-icon">👁</span>
+                        <div class="ac-body"><div class="ac-title">Control the Veil</div><div class="ac-desc">Claim dominion over reality.</div></div>
+                        <span class="ac-arrow" style="color:var(--blood)">›</span>
+                    </button>
+                    <button class="action-card ac-veil" onclick="VeilCore.merge()">
+                        <span class="ac-icon">◉</span>
+                        <div class="ac-body"><div class="ac-title">Merge with the Veil</div><div class="ac-desc">Become the boundary itself.</div></div>
+                        <span class="ac-arrow" style="color:var(--veil)">›</span>
+                    </button>
+                </div>
+            </div>
+            <div class="bottom-nav scene-bottom-nav">
+                <button class="nav-btn" onclick="SceneEngine.travel('map')"><span class="nav-icon">🗺</span><span class="nav-label">Map</span></button>
+                <button class="nav-btn" onclick="Inventory.open()"><span class="nav-icon">🎒</span><span class="nav-label">Pack</span></button>
+                <button class="nav-btn" onclick="Game.openStats()"><span class="nav-icon">👤</span><span class="nav-label">Status</span></button>
+                <button class="nav-btn" onclick="Game.openJournal()"><span class="nav-icon">📜</span><span class="nav-label">Lore</span></button>
+                <button class="nav-btn" onclick="Game.openCraft()"><span class="nav-icon">⚗</span><span class="nav-label">Craft</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HUD -->
+    <div id="hud" class="hidden">
+        <div class="hud-bar">
+            <div class="hud-stat-group">
+                <div class="hud-stat bar-hp">
+                    <div class="hud-stat-label">HP</div>
+                    <div class="hud-bar-track"><div class="hud-bar-fill hud-hp" id="bar-hp" style="width:100%"></div></div>
+                    <div class="hud-stat-val" id="val-hp">100</div>
+                </div>
+                <div class="hud-stat bar-mp">
+                    <div class="hud-stat-label">MP</div>
+                    <div class="hud-bar-track"><div class="hud-bar-fill hud-mp" id="bar-mp" style="width:100%"></div></div>
+                    <div class="hud-stat-val" id="val-mp">60</div>
+                </div>
+                <div class="hud-stat bar-cor">
+                    <div class="hud-stat-label">Veil</div>
+                    <div class="hud-bar-track"><div class="hud-bar-fill hud-veil" id="bar-cor" style="width:0%"></div></div>
+                    <div class="hud-stat-val" id="val-cor">0%</div>
+                </div>
+            </div>
+            <div class="hud-right-group">
+                <div class="hud-level-badge" id="hud-level">Lv.1</div>
+                <div class="hud-gold-badge">⬡ <span id="val-gold">50</span>g</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMBAT -->
+    <div id="combat-overlay">
+        <div class="combat-header">
+            <div class="combat-turn-indicator" id="combat-turn">Your Turn</div>
+            <div class="combat-location-tag" id="hud-location">—</div>
+        </div>
+        <div class="combat-arena">
+            <div class="combat-fighter player-side">
+                <div class="fighter-emoji" id="player-sprite">🗡</div>
+                <div class="fighter-name-tag">VEILWALKER</div>
+                <div class="fighter-hp-track"><div class="fighter-hp-bar player-hp" id="combat-player-hp" style="width:100%"></div></div>
+                <div class="fighter-hp-val" id="combat-player-hp-val">100/100 HP</div>
+            </div>
+            <div class="vs-badge">VS</div>
+            <div class="combat-fighter enemy-side">
+                <div class="fighter-emoji enemy-emoji" id="enemy-sprite">👹</div>
+                <div class="fighter-name-tag" id="enemy-name-display">SHADOW ECHO</div>
+                <div class="fighter-hp-track"><div class="fighter-hp-bar enemy-hp" id="combat-enemy-hp" style="width:100%"></div></div>
+                <div class="fighter-hp-val" id="combat-enemy-hp-val">— HP</div>
+            </div>
+        </div>
+        <div class="combat-log-wrap"><div id="combat-log" class="combat-log"></div></div>
+        <div class="combat-action-grid">
+            <button class="cab" onclick="Combat.attack()"><span class="cab-icon">⚔</span><span class="cab-label">Strike</span></button>
+            <button class="cab cab-veil" onclick="Combat.special()" id="btn-special"><span class="cab-icon">✨</span><span class="cab-label">Veil Strike</span></button>
+            <button class="cab" onclick="Combat.heal()"><span class="cab-icon">🧪</span><span class="cab-label">Heal</span></button>
+            <button class="cab cab-flee" onclick="Combat.flee()"><span class="cab-icon">💨</span><span class="cab-label">Flee</span></button>
+        </div>
+    </div>
+
+</div><!-- /game-viewport -->
+
+<!-- TOAST -->
+<div id="toast-container"></div>
+
+<!-- CHOICE MODAL -->
+<div id="choice-modal">
+    <div class="modal-scrim"></div>
+    <div class="modal-box">
+        <div class="modal-header"><span class="modal-sigil">◈</span><span id="choice-title">Choose</span></div>
+        <div id="choice-body" class="modal-body"></div>
+        <div id="choice-options" class="modal-opts"></div>
+    </div>
+</div>
+
+<!-- INVENTORY -->
+<div id="inventory-overlay">
+    <div class="modal-scrim"></div>
+    <div class="modal-box inv-box">
+        <div class="modal-header">
+            <span class="modal-sigil">🎒</span><span>Inventory</span>
+            <button class="modal-close" onclick="Inventory.close()">✕</button>
+        </div>
+        <div class="inv-tabs">
+            <button class="inv-tab active" onclick="Inventory.tab('items',this)">Items</button>
+            <button class="inv-tab" onclick="Inventory.tab('lore',this)">Lore</button>
+        </div>
+        <div id="inv-content" class="inv-grid"></div>
+    </div>
+</div>
+
+<script src="emberfall.js"></script>
+</body>
+</html>
